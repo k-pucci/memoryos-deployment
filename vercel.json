@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "memoryos-ui/package.json",
+      "src": "package.json",
       "use": "@vercel/next"
     }
   ],
@@ -11,10 +11,11 @@
       "NEXT_TELEMETRY_DISABLED": "1"
     }
   },
+  "outputDirectory": ".next",
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/memoryos-ui/$1"
+      "dest": "/$1"
     }
   ]
 }
