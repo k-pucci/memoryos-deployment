@@ -4,6 +4,9 @@ const nextConfig = {
     domains: ['localhost', 'vercel.app'],
   },
   output: 'export',
+  trailingSlash: true,
+  basePath: '',
+  distDir: '.next',
   experimental: {
     outputFileTracing: false,
   },
