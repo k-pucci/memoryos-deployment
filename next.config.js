@@ -7,10 +7,6 @@ const nextConfig = {
   trailingSlash: true,
   basePath: '',
   distDir: '.next',
-  experimental: {
-    outputFileTracing: false,
-    optimizeCss: true,
-  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
