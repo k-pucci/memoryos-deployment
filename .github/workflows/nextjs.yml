@@ -2,9 +2,9 @@ name: Next.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -22,29 +22,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build for production
-        run: |
-          echo "NEXT_PUBLIC_STATIC_EXPORT=false" >> .env
-          npm run build
+      - name: Build
+        run: npm run build
 
-      - name: Export static site
-        run: |
-          echo "NEXT_PUBLIC_STATIC_EXPORT=true" > .env
-          npm run build
-          npm run export
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: out/
-          retention-days: 5
+      # No need to export - Vercel will handle the deployment
 
       - name: Show build output
         run: |
           echo "Build directory contents:"
           ls -la .next
-          echo "Export directory contents:"
           ls -la out
           echo "Package.json contents:"
           cat package.json

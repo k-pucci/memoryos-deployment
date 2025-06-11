@@ -4,12 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --no-lint",
-    "export": "next export",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build:static": "NEXT_PUBLIC_STATIC_EXPORT=true next build && next export",
-    "prepare": "npm run build:static"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.9",
