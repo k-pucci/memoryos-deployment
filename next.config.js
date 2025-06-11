@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['localhost', 'vercel.app'],
+    unoptimized: true, // Required for static export
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -10,10 +11,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Only include page files in the pages directory
-  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+  // Only include page files in the app directory
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   
-  // Completely ignore API routes during build
+  // Skip API routes during build
+  experimental: {
+    // This will prevent API routes from being processed during build
+    // They'll be handled by Vercel's serverless functions
+    serverActions: true,
+  },
+  
+  // Webpack configuration
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -22,26 +30,15 @@ const nextConfig = {
         crypto: false,
         stream: false,
       };
-    }
-    
-    // Exclude API routes from the client-side bundle
-    if (!isServer) {
+      
+      // Exclude API routes from the client-side bundle
       config.module.rules.push({
-        test: /\/api\/.*\.(ts|js|tsx|jsx)$/,
+        test: /\/api\/\.*(js|mjs|jsx|ts|tsx)$/,
         use: 'null-loader',
       });
     }
     
     return config;
-  },
-  
-  // Skip API routes during build
-  async exportPathMap() {
-    return {
-      '/': { page: '/' },
-      '/dashboard': { page: '/dashboard' },
-      // Add other static pages here
-    };
   },
 }
 
