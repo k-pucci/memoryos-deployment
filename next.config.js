@@ -9,6 +9,19 @@ const nextConfig = {
   distDir: '.next',
   experimental: {
     outputFileTracing: false,
+    optimizeCss: true,
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+        stream: false,
+      }
+    }
+    return config
   },
 }
 

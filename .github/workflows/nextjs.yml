@@ -9,27 +9,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Use Node.js 18.x
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm list
 
       - name: Build with Next.js
-        run: npm run build
+        run: |
+          npm run build
+          ls -la .next
 
       - name: Export for static hosting
-        run: npm run export
+        run: |
+          npm run export
+          ls -la out
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifact
           path: out/
+
+      - name: Show build output
+        run: |
+          echo "Build directory contents:"
+          ls -la .next
+          echo "Export directory contents:"
+          ls -la out
+          echo "Package.json contents:"
+          cat package.json
