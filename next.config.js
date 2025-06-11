@@ -1,24 +1,34 @@
+// Check if we're building for static export
+const isStaticExport = process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['localhost', 'vercel.app'],
     unoptimized: true, // Required for static export
   },
-  output: 'export',
+  // Only enable output: 'export' for static builds
+  ...(isStaticExport && { output: 'export' }),
   trailingSlash: true,
   basePath: '',
   distDir: '.next',
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
     ignoreBuildErrors: true,
+  },
+  // Skip API routes during static export
+  exportPathMap: async function() {
+    return isStaticExport ? {
+      '/': { page: '/' },
+      '/dashboard': { page: '/dashboard' },
+      '/memory-stack': { page: '/memory-stack' },
+      '/new-memory': { page: '/new-memory' },
+      '/profile': { page: '/profile' },
+      '/search': { page: '/search' },
+      // Add other static pages here
+    } : {};
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

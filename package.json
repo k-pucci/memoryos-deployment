@@ -8,7 +8,8 @@
     "export": "next export",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "npm run build && npm run export"
+    "build:static": "NEXT_PUBLIC_STATIC_EXPORT=true next build && next export",
+    "prepare": "npm run build:static"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.9",

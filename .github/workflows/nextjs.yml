@@ -9,34 +9,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CI: true
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: '18.x'
           cache: 'npm'
-          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: |
-          npm ci
-          npm list
+        run: npm ci
 
-      - name: Build with Next.js
+      - name: Build for production
         run: |
+          echo "NEXT_PUBLIC_STATIC_EXPORT=false" >> .env
           npm run build
-          ls -la .next
 
-      - name: Export for static hosting
+      - name: Export static site
         run: |
+          echo "NEXT_PUBLIC_STATIC_EXPORT=true" > .env
+          npm run build
           npm run export
-          ls -la out
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
