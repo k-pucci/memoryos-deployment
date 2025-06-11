@@ -30,12 +30,16 @@ jobs:
       - name: Build
         run: |
           # Create a minimal .env file for build
-          echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" > .env
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> .env
-          echo "SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY" >> .env
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" > .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env
           
-          # Run the build
-          npm run build
+          # Debug: Show .env file (without sensitive data)
+          echo "NEXT_PUBLIC_SUPABASE_URL is set: ${#NEXT_PUBLIC_SUPABASE_URL} chars"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is set: ${#NEXT_PUBLIC_SUPABASE_ANON_KEY} chars"
+          
+          # Run the build with production env
+          NODE_ENV=production npm run build
 
       # This is just for debugging, can be removed later
       - name: Show build output
