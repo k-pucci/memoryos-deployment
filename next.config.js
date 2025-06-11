@@ -1,3 +1,4 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -9,8 +10,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Skip API routes during build as they'll be handled by Vercel's serverless functions
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  // Only include page files in the pages directory
+  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+  
+  // Completely ignore API routes during build
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -20,7 +23,25 @@ const nextConfig = {
         stream: false,
       };
     }
+    
+    // Exclude API routes from the client-side bundle
+    if (!isServer) {
+      config.module.rules.push({
+        test: /\/api\/.*\.(ts|js|tsx|jsx)$/,
+        use: 'null-loader',
+      });
+    }
+    
     return config;
+  },
+  
+  // Skip API routes during build
+  async exportPathMap() {
+    return {
+      '/': { page: '/' },
+      '/dashboard': { page: '/dashboard' },
+      // Add other static pages here
+    };
   },
 }
 
