@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  images: {
+    domains: ['localhost', 'vercel.app'],
+  },
+  output: 'standalone',
+  experimental: {
+    outputStandalone: true,
+  },
 };
 
 export default nextConfig;
